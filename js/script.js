@@ -2,10 +2,10 @@ $(document).ready(function () {
     var table = $('.table'),
         renredButton = $('.render'),
         chartElement = $('#chart'),
-        labelNames = ['Защищенность', 'Интренсивность отражения угрозы', 'Интренсивность контроля', 'Интенсивность воздействия'],
+        labelNames = ['Защищенность', 'Интренсивность отражения угрозы', 'Интренсивность контроля', 'Интенсивность воздействия', 'Интенсивность отказов'],
         dataFromTable = [],
         TABLE_INIT_ROWS = 10,
-        TABLE_DATA_COLS = 4,
+        TABLE_DATA_COLS = 5,
         
         //Коофициент маштаба
         B = 2,
@@ -207,6 +207,7 @@ $(document).ready(function () {
             $(cells[index + 1]).val(rand());
             $(cells[index + 2]).val(rand());
             $(cells[index + 3]).val(rand());
+            $(cells[index + 4]).val(rand());
 
             $(cells[index]).val(calcTargetValue($(cells[index + 1]).val(), $(cells[index + 2]).val(), $(cells[index + 3]).val()));
         }
