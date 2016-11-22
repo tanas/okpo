@@ -2,27 +2,25 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>ОКПО Булыгин Егор Вадимович 6М2311</title>
+    <title>ОКПО Танасюк Олег 6М2312</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
         <div class="data">
-            <table class="table table-bordered">
-                <tr class="header">
-                    <td>№</td>
-                    <td>Практичность U (подхарактеристики M11, M12)</td>
-                    <td>Понятность пригодности (M11 успешное завершение функций с первой попытки)</td>
-                    <td>Понятность пригодности (M12 корректность описания функций пользователем)</td>
-                    <td>Обучаемость</td>
-                    <td>Простота использования</td>
-                    <td>Эстетичность пользовательского интерфейса</td>
+            <table class="table table-bordered table-striped">
+                <tr class="">
+                    <td>#</td>
+                    <td>Защищенность</td>
+                    <td>Интренсивность отражения угрозы</td>
+                    <td>Интренсивность контроля</td>
+                    <td>Интенсивность воздействия</td>
                 </tr>
             </table>
 
             <button type="button" class="render btn btn-default">Обработать</button>
-            <input type="text" class="targetFunc form-control" style="width: 300px;float:left;" placeholder="Целевое значение функции качества">
+            <input type="text" class="targetFunc form-control" style="width: 300px;float:left;" placeholder="Целевое значение функции защищенности">
         </div>
         <div class="graph">
             <canvas id="chart" width="400" height="200"></canvas>

@@ -2,10 +2,10 @@ $(document).ready(function () {
     var table = $('.table'),
         renredButton = $('.render'),
         chartElement = $('#chart'),
-        labelNames = ['Практичность U', 'Понятность пригодности M11 (успешное завершение функций с первой попытки)', 'Понятность пригодности M12 (корректность описания функций пользователем)', 'Обучаемость', 'Простота использования', 'Эстетичность пользовательского интерфейса'],
+        labelNames = ['Защищенность', 'Интренсивность отражения угрозы', 'Интренсивность контроля', 'Интенсивность воздействия'],
         dataFromTable = [],
         TABLE_INIT_ROWS = 10,
-        TABLE_DATA_COLS = 6,
+        TABLE_DATA_COLS = 4,
         
         //Коофициент маштаба
         B = 2,
@@ -17,84 +17,23 @@ $(document).ready(function () {
         //Целевая функция
         targetFunc = 1;
 
-        //Количество пользователей, участвовавших в тестировании
-        userCount = 3;
-        
-        //Кол. тест. функций
-        testActionsCount = 10;
+    // Вероятность отражения угрозы
+    var pOt = 0.85;
 
-        v1Coefficient = 0.7; // весовой коэффициент m11 подхарактеристики практичности.
-        v2Coefficient = 0.3; // весовой коэффициент m12 подхарактеристики практичности.
+    // Защищенность
+    // v_ot: интенсивность отражения угрозы
+    // v_k: интенсивность контроля
+    // v_v: интенсивность воздействия угрозы
+    function calcTargetValue(v_ot, v_k, v_v){
+        var t_ob = 1 / v_ot;
+        var t_k = 1 / v_k;
+        var v_n = v_v * (1 - pOt);
+        var t_n = 1 / v_n;
 
-    //Практичность U
-    function getU(m11, m12){
-        return m11 * v1Coefficient + m12 * v2Coefficient;
-    }
+        var k = t_n / (t_n + t_ob + t_k);
 
-    //Мера качества m11 (успешное завершение функций с первой попытки) 
-    function getM11(){
-        var f = 0, f1 = 0;
-        for(var i = 0; i < userCount; i++){
-            f1 = randomInteger(5, testActionsCount); //количество успешно за-вершенных i-ым пользователем функций
-            // testActionsCount общее количество вызванных i-ым пользователем функций
-            f += f1 / testActionsCount;
-        }
+        return k.toFixed(2);
 
-        return f / userCount;
-    }
-
-    //Мера качества m12 (корректность описания функций пользователем) 
-    function getM12(){
-        var d = 0, d1 = 0;
-        for(var i = 0; i < userCount; i++){
-            d1 = randomInteger(6, testActionsCount); //количество корректно описанных i-ым пользователем функций
-            
-            // testActionsCount общее количество функций описанных i-ым пользователем.
-            d += d1 / testActionsCount;
-        }
-
-        return d / userCount;
-    }
-
-
-    //Мера качества m2 (простота изучения функций) 
-    function getM2(){
-        var h = 0, h1 = 0, h2 = 0;
-        for(var i = 0; i < userCount; i++){
-            h1 = randomInteger(5, testActionsCount); //– количество успешно за-вершенных i-ым пользователем функций после обращения к документации;
-            h2 = randomInteger(8, testActionsCount); //количество обращений к документации i-ым пользователя
-            h += h1/h2;
-        }
-
-        return h / userCount;
-    }
-
-    //Мера качества m3 (логичность и последовательность функциональных действий)
-    function getM3(){
-        var a = 0;
-        for(var i = 0; i < userCount; i++){
-            a += randomInteger(1, 5); //количество информаци-онных сообщений или функциональных возможностей, которые i-ый пользователь нашел не-последовательными (нелогичными)
-        }
-  
-        //testActionsCount общее количество ин-формационных сообщений
-        return 1 - a / (userCount * testActionsCount);
-    }
-
-    //Мера качества m4 (адаптируемость пользовательского интерфейса)
-    function getM4(){
-        var c = 0;
-        for(var i = 0; i < userCount; i++){
-            c += randomInteger(1, 7); //количество элементов пользовательского интерфейса которые может настраивать i-ый пользователь;
-        }
-        
-        // testActionsCount общее коли-чество элементов пользовательского интерфейса.
-        return 1 - c / (userCount * testActionsCount);
-    }
-
-    function randomInteger(min, max) {
-        var rand = min - 0.5 + Math.random() * (max - min + 1)
-        rand = Math.round(rand);
-        return rand;
     }
 
     function getLCL(k, rowNumber) {
@@ -254,6 +193,10 @@ $(document).ready(function () {
         }
     }
 
+    function rand() {
+        return Math.random().toFixed(2);
+    }
+
     function fillTableWithData() {
 
         var cells = $('.cell');
@@ -261,13 +204,11 @@ $(document).ready(function () {
         for(var i =0; i < TABLE_INIT_ROWS; i ++){
             var index = i * TABLE_DATA_COLS;
 
-            $(cells[index + 1]).val(getM11().toFixed(2));
-            $(cells[index + 2]).val(getM12().toFixed(2));
-            $(cells[index]).val( getU($(cells[index + 1]).val(), $(cells[index + 2]).val()).toFixed(2));
+            $(cells[index + 1]).val(rand());
+            $(cells[index + 2]).val(rand());
+            $(cells[index + 3]).val(rand());
 
-            $(cells[index + 3]).val( getM2().toFixed(2));
-            $(cells[index + 4]).val( getM3().toFixed(2));
-            $(cells[index + 5]).val( getM4().toFixed(2));
+            $(cells[index]).val(calcTargetValue($(cells[index + 1]).val(), $(cells[index + 2]).val(), $(cells[index + 3]).val()));
         }
 
     }
@@ -278,7 +219,7 @@ $(document).ready(function () {
 
         for(var i =0; i < TABLE_INIT_ROWS; i ++){
             var index = i * TABLE_DATA_COLS;
-            $(cells[index]).val( getU($(cells[index + 1]).val(), $(cells[index + 2]).val()).toFixed(2));
+            $(cells[index]).val(calcTargetValue($(cells[index + 1]).val(), $(cells[index + 2]).val(), $(cells[index + 3]).val()));
         }
 
     }
